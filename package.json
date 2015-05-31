@@ -1,0 +1,25 @@
+{
+  "name": "convo",
+  "version": "0.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "jasmine-node spec/ --autotest --color --verbose --watch .",
+    "webpack": "webpack --watch --progress --colors"
+  },
+  "author": "dave-filion",
+  "dependencies": {
+    "express": "^4.12.4",
+    "fluxxor": "^1.5.4",
+    "jquery": "^2.1.4",
+    "jsx-loader": "^0.13.2",
+    "moment": "^2.10.3",
+    "react": "^0.13.3",
+    "request": "^2.56.0",
+    "socket.io": "^1.3.5",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "jasmine": "^2.3.1"
+  }
+}
