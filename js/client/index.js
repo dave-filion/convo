@@ -2,31 +2,32 @@ var socket = io();
 var events = require('../events.js');
 var React = require('react');
 var $ = require('jquery');
+var _ = require('underscore');
 
 var MessagesView = require('./MessagesView.js');
+var LoginView = require('./LoginView.js');
 
 var MainView = React.createClass({
 
   getInitialState: function() {
     return {
+      username: null,
+      roomname: null,
       message: "",
       messages: []
     };
   },
 
   componentDidMount: function() {
-    // login
-    this.props.socket.emit(events.ATTEMPT_LOGIN, {
-      username: "dave",
-      roomname: "roomeytoo"
-    });
-
     // login response
+    // TODO need to only broadcast this to the user
     this.props.socket.on(events.LOGIN_SUCCESS, function(payload) {
-      this.setState({messages: payload.messages});
+      this.setState({
+        username: payload.username,
+        roomname: payload.room.name,
+        messages: payload.room.messages
+      });
     }.bind(this));
-
-    this.refs.MessageInput.getDOMNode().focus();
 
     this.props.socket.on(events.SEND_MESSAGE, function(payload) {
       var messages = payload.messages;
@@ -37,9 +38,12 @@ var MainView = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     var message = this.state.message;
-    this.props.socket.emit(events.SEND_MESSAGE, {message: message,
-                           roomname: "roomeytoo",
-                           username: "dave"});
+    var request = {
+      message: message,
+      roomname: this.state.roomname,
+      username: this.state.username
+    };
+    this.props.socket.emit(events.SEND_MESSAGE, request);
     this.setState({message: ""});
   },
 
@@ -48,19 +52,25 @@ var MainView = React.createClass({
   },
 
   render: function() {
-    return (
-      <div>
-      <MessagesView messages={this.state.messages} />
-
-      <form onSubmit={this.handleSubmit}>
-      <input ref="MessageInput"
-      onChange={this.handleMessageChange}
-      value={this.state.message}
-      autoComplete="off" />
-      <button>Send</button>
-      </form>
-      </div>
-    );
+    var content;
+    if (_.isNull(this.state.username)) {
+      content = <LoginView socket={this.props.socket} />;
+    } else {
+      content = (
+        <div>
+          <h1>{this.state.username} in {this.state.roomname}</h1>
+          <MessagesView messages={this.state.messages} />
+          <form onSubmit={this.handleSubmit}>
+            <input ref="MessageInput"
+                onChange={this.handleMessageChange}
+                value={this.state.message}
+                autoComplete="off" />
+            <button>Send</button>
+          </form>
+        </div>
+      );
+    }
+    return <div>{content}</div>;
   }
 });
 

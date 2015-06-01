@@ -4,8 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "jasmine-node spec/ --autotest --color --verbose --watch .",
-    "webpack": "webpack --watch --progress --colors"
+    "test": "jasmine-node spec/ --autotest --color --verbose --watch js/"
   },
   "author": "dave-filion",
   "dependencies": {

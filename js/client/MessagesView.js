@@ -10,7 +10,7 @@ module.exports = React.createClass({
     });
 
     return (
-      <ul>
+      <ul id='messages'>
         {messages}
       </ul>
     );

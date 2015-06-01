@@ -25,12 +25,13 @@ module.exports = {
   },
 
   // creates a empty room with inital user
-  createRoom : function(username) {
+  createRoom : function(username, roomname) {
     var users = {};
     users[username] = this.createUser(username);
     return {
       users: users,
-      messages: []
+      messages: [],
+      name: roomname
     };
   },
 
@@ -80,9 +81,12 @@ module.exports = {
         console.log("cannot have more than two users in a room");
       }
     } else {
-      this.rooms[roomname] = this.createRoom(username);
+      this.rooms[roomname] = this.createRoom(username, roomname);
     }
-    return this.rooms[roomname];
+    return {
+      room: this.rooms[roomname],
+      username: username
+    };
   },
 
   getState: function() {

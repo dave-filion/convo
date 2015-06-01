@@ -23,8 +23,12 @@ describe('app', function() {
   });
 
   it('can login', function() {
-    app.login('steve', 'room2');
+    var response = app.login('steve', 'room2');
+    var room = response.room;
+    var username = response.username;
     expect(_.has(app.rooms, 'room2')).toBe(true);
+    expect(room.name).toBe("room2");
+    expect(username).toBe('steve');
   });
 
   it('doesn\' allow more than two people in a room', function() {
@@ -41,9 +45,10 @@ describe('app', function() {
     var roomname = "room";
     app.login(username, roomname);
 
-    var message = app.postMessage(text, username, roomname);
+    var room = app.postMessage(text, username, roomname);
+    var message = _.first(room.messages);
     expect(message.text).toBe(text);
-    expect(_.size(app.rooms[roomname].messages)).toBe(1);
+    expect(_.size(room.messages)).toBe(1);
   });
 
 
